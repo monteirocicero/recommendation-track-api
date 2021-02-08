@@ -1,6 +1,6 @@
-package com.orecic.recommentationtrackapi.infrastructure;
+package com.orecic.recommentationtrackapi.infrastructure.client;
 
-import com.orecic.recommentationtrackapi.infrastructure.data.WeatherResponse;
+import com.orecic.recommentationtrackapi.infrastructure.data.weather.WeatherResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

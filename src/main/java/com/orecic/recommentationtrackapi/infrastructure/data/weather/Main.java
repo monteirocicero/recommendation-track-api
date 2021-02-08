@@ -1,4 +1,4 @@
-package com.orecic.recommentationtrackapi.infrastructure.data;
+package com.orecic.recommentationtrackapi.infrastructure.data.weather;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

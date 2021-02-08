@@ -1,6 +1,7 @@
 package com.orecic.recommentationtrackapi.infrastructure;
 
-import com.orecic.recommentationtrackapi.infrastructure.data.WeatherResponse;
+import com.orecic.recommentationtrackapi.infrastructure.client.WeatherClient;
+import com.orecic.recommentationtrackapi.infrastructure.data.weather.WeatherResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
