@@ -1,6 +1,5 @@
-package com.orecic.recommentationtrackapi.infrastructure;
+package com.orecic.recommentationtrackapi.infrastructure.client;
 
-import com.orecic.recommentationtrackapi.infrastructure.client.WeatherClient;
 import com.orecic.recommentationtrackapi.infrastructure.data.weather.WeatherResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

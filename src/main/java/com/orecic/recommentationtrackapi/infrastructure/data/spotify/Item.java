@@ -5,17 +5,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class SpotifyArtistResponse {
+@JsonIgnoreProperties
+public class Item {
 
-    @JsonProperty("artists")
-    private Artist artists ;
+    @JsonProperty("id")
+    private String id;
 
-    public Artist getArtists() {
-        return artists;
+    public String getId() {
+        return id;
     }
 
-    public void setArtists(Artist artists) {
-        this.artists = artists;
+    public void setId(String id) {
+        this.id = id;
     }
 }

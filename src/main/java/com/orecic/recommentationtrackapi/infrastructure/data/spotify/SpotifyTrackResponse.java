@@ -4,18 +4,20 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class SpotifyArtistResponse {
+@JsonIgnoreProperties
+public class SpotifyTrackResponse {
 
-    @JsonProperty("artists")
-    private Artist artists ;
+    @JsonProperty("tracks")
+    private List<Track> tracks;
 
-    public Artist getArtists() {
-        return artists;
+    public List<Track> getTracks() {
+        return tracks;
     }
 
-    public void setArtists(Artist artists) {
-        this.artists = artists;
+    public void setTracks(List<Track> tracks) {
+        this.tracks = tracks;
     }
 }
