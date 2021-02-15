@@ -60,4 +60,31 @@ public class RecommendationTrackServiceTest {
         Assertions.assertEquals(track.getName(), recommendations.stream().findFirst().get().getName());
     }
 
+    @Test
+    public void shouldGetRecommendationByLatLon() {
+        // given
+        var lat = "59.9127";
+        var lon = "10.7461";
+        var mockWeather = 27.62;
+        var  mockArtist = new SpotifyArtistResponse();
+        var artist = new Artist();
+        var item = new Item();
+        item.setId("1");
+        artist.setItens(Arrays.asList(item));
+        mockArtist.setArtists(artist);
+        var mockTrack = new SpotifyTrackResponse();
+        var track = new Track();
+        track.setName("let it be");
+        mockTrack.setTracks(Collections.singletonList(track));
+
+        // when
+        Mockito.when(weatherService.getWeatherByCity(Mockito.anyString())).thenReturn(mockWeather);
+        Mockito.when(spotifyClient.getArtistByGenreMusic(Mockito.anyString())).thenReturn(mockArtist);
+        Mockito.when(spotifyClient.getTopTracksByArtist(Mockito.anyString())).thenReturn(mockTrack);
+
+        // then
+       var recommendations = recommendationTrackService.getRecommendationByCoordinates(lat, lon);
+       Assertions.assertEquals(track.getName(), recommendations.stream().findFirst().get().getName());
+    }
+
 }

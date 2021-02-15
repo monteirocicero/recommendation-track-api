@@ -76,6 +76,7 @@ public class SpotifyClientImpl implements SpotifyClient {
 
     @Override
     public SpotifyArtistResponse getArtistByGenreMusic(String genre) {
+        System.out.println("genre: " + genre);
         try {
             CloseableHttpClient client =  HttpClients.createDefault();
             HttpGet httpGet = new HttpGet(searchUri);

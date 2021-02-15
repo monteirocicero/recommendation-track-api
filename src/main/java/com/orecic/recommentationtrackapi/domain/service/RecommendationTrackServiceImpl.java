@@ -22,9 +22,11 @@ public class RecommendationTrackServiceImpl implements RecommendationTrackServic
 
     @Override
     public List<RecommendationTrack> getRecommendationByCityName(String city) {
-
         var weatherInfo = weatherService.getWeatherByCity(city);
+        return buildRecommendation(weatherInfo);
+    }
 
+    private List<RecommendationTrack> buildRecommendation(Double weatherInfo) {
         String genreMusic = GenreMusicEnum.CLASSICAL.getDescripion();
         if (weatherInfo > 30) {
             genreMusic = GenreMusicEnum.PARTY.getDescripion();
@@ -39,4 +41,11 @@ public class RecommendationTrackServiceImpl implements RecommendationTrackServic
 
         return tracks.getTracks().stream().map(track -> new RecommendationTrack(track.getName())).collect(Collectors.toList());
     }
+
+    @Override
+    public List<RecommendationTrack> getRecommendationByCoordinates(String lat, String lon) {
+        var weatherInfo = weatherService.getWeatherByLatLon(lat, lon);
+        return buildRecommendation(weatherInfo);
+    }
+
 }

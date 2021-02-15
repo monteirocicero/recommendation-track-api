@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class WeatherServiceImpl implements WeatherService {
 
+
     @Value("${weather.api.appId}")
     private String weatherAppId;
-
     private final WeatherClient weatherClient;
+    private final String unit = "metric";
 
     @Autowired
     public WeatherServiceImpl(WeatherClient weatherClient) {
@@ -20,7 +21,11 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public Double getWeatherByCity(String city) {
-        String unit = "metric";
         return weatherClient.getWeatherByCity(city, unit, weatherAppId).getTemperature();
+    }
+
+    @Override
+    public Double getWeatherByLatLon(String lat, String lon) {
+        return weatherClient.getWeatherByCoordinates(lat, lon, unit, weatherAppId).getTemperature();
     }
 }

@@ -30,7 +30,7 @@ public class WeatherServiceTest {
     }
 
     @Test
-    public void shouldGetWeatherWithSuccess() {
+    public void shouldGetWeatherByCityNameWithSuccess() {
         // given
         var city = "campinas";
         var weatherMock = new WeatherResponse();
@@ -47,4 +47,26 @@ public class WeatherServiceTest {
 
         Assertions.assertEquals(mainTemperature.getTemp(), realTemperature);
     }
+
+    @Test
+    public void shouldGetWeatherByLatLonWithSuccess() {
+        // given
+        var lat = "59.9127";
+        var lon = "10.7461";
+        var weatherMock = new WeatherResponse();
+        var mainTemperature = new Main();
+        mainTemperature.setTemp(-3.86);
+        weatherMock.setMain(mainTemperature);
+        ReflectionTestUtils.setField(weatherService, "weatherAppId", "b77e07f479efe92156376a8b07640ced");
+
+        // when
+        Mockito.when(weatherClient.getWeatherByCoordinates(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).thenReturn(weatherMock);
+
+        // then
+        var realTemperature = weatherService.getWeatherByLatLon(lat, lon);
+
+        Assertions.assertEquals(mainTemperature.getTemp(), realTemperature);
+    }
+
+
 }
