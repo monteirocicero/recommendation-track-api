@@ -7,6 +7,7 @@ import com.orecic.recommentationtrackapi.infrastructure.data.spotify.SpotifyArti
 import com.orecic.recommentationtrackapi.infrastructure.data.spotify.SpotifyTrackResponse;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -17,6 +18,7 @@ import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
+import org.apache.hc.core5.util.Timeout;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class SpotifyClientImpl implements SpotifyClient {
@@ -50,6 +53,7 @@ public class SpotifyClientImpl implements SpotifyClient {
     public SpotifyAccessTokenResponse getAccessToken() {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(tokenUri);
+        httpPost.setConfig(requestConfigTimeout());
 
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("grant_type", grantType));
@@ -76,7 +80,6 @@ public class SpotifyClientImpl implements SpotifyClient {
 
     @Override
     public SpotifyArtistResponse getArtistByGenreMusic(String genre) {
-        System.out.println("genre: " + genre);
         try {
             CloseableHttpClient client =  HttpClients.createDefault();
             HttpGet httpGet = new HttpGet(searchUri);
@@ -87,6 +90,7 @@ public class SpotifyClientImpl implements SpotifyClient {
                     .build();
             httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken().getAccessToken());
             httpGet.setUri(uri);
+            httpGet.setConfig(requestConfigTimeout());
             CloseableHttpResponse response = client.execute(httpGet);
 
             if (response.getCode() == HttpStatus.SC_OK) {
@@ -106,11 +110,23 @@ public class SpotifyClientImpl implements SpotifyClient {
 
     }
 
+    private RequestConfig requestConfigTimeout() {
+        var timeoutSeconds = 5;
+        var connectTimeOut = Timeout.of(timeoutSeconds * 1000, TimeUnit.MILLISECONDS);
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectionRequestTimeout(connectTimeOut)
+                .setConnectTimeout(connectTimeOut)
+                .build();
+
+        return requestConfig;
+    }
+
     @Override
     public SpotifyTrackResponse getTopTracksByArtist(String artistId) {
         try {
             CloseableHttpClient client =  HttpClients.createDefault();
             HttpGet httpGet = new HttpGet(topTracksUri.replace(":id", artistId));
+            httpGet.setConfig(requestConfigTimeout());
 
             httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken().getAccessToken());
             CloseableHttpResponse response = client.execute(httpGet);
