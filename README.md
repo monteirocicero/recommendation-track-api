@@ -11,16 +11,16 @@ To Control execution of external integration the project make use of Java Future
 To execute locally you can execute the above command on command line
 
 
-./gradlew bootRun`
+`./gradlew bootRun`
 
 The docker image is generated like it:
 
-`sudo docker build -t recommendation-track-api:1.0
+`sudo docker build -t recommendation-track-api:1.0`
 
 After build the image, so we could execute the another command:
 
 
-`sudo docker run -d -p 8080:8080 -t recommendation-track-api:1.0
+`sudo docker run -d -p 8080:8080 -t recommendation-track-api:1.0`
  
 
 ## API Endpoint
@@ -28,11 +28,11 @@ After build the image, so we could execute the another command:
 /track
 
 Request
-curl -X GET "localhost:8080/track?city=oslo"
+`curl -X GET "localhost:8080/track?city=oslo"`
 
 OR
 
-curl -X GET "localhost:8080/track?lat=151.2073&lat=-33.8679"
+`curl -X GET "localhost:8080/track?lat=151.2073&lat=-33.8679"`
 
 Response
 
