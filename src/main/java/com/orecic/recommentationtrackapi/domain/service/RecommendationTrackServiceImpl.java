@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,8 +24,12 @@ public class RecommendationTrackServiceImpl implements RecommendationTrackServic
 
     @Override
     public List<RecommendationTrack> getRecommendationByCityName(String city) {
-        var weatherInfo = weatherService.getWeatherByCity(city);
-        return buildRecommendation(weatherInfo);
+       var weatherInfoFuture = CompletableFuture.supplyAsync(() -> weatherService.getWeatherByCity(city));
+        try {
+            return buildRecommendation(weatherInfoFuture.get());
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Weather API failed!");
+        }
     }
 
     private List<RecommendationTrack> buildRecommendation(Double weatherInfo) {
@@ -36,10 +42,16 @@ public class RecommendationTrackServiceImpl implements RecommendationTrackServic
             genreMusic = GenreMusicEnum.ROCK.getDescripion();
         }
 
-        var artist = spotifyClient.getArtistByGenreMusic(genreMusic);
-        var tracks = spotifyClient.getTopTracksByArtist(artist.getArtists().getItens().stream().findFirst().get().getId());
+        String finalGenreMusic = genreMusic;
+        var tracks =
+                CompletableFuture.supplyAsync(() -> spotifyClient.getArtistByGenreMusic(finalGenreMusic))
+                        .thenCompose(s ->  CompletableFuture.supplyAsync(() -> spotifyClient.getTopTracksByArtist(s.getArtists().getItens().stream().findFirst().get().getId())));
+        try {
+            return tracks.get().getTracks().stream().map(track -> new RecommendationTrack(track.getName())).collect(Collectors.toList());
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Spotify API failed!");
+        }
 
-        return tracks.getTracks().stream().map(track -> new RecommendationTrack(track.getName())).collect(Collectors.toList());
     }
 
     @Override
